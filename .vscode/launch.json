@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "Launch User Service",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/services/user-service/cmd/server",
+            "cwd": "${workspaceFolder}/services/user-service",
+            "env": {},
+            "envFile": "${workspaceFolder}/services/user-service/.env"
+        }
+    ]
+}
