@@ -42,6 +42,7 @@ func main() {
 	r.Post("/register", userHandler.Register)
 	r.Post("/login", userHandler.Login)
 
+	//TODO
 	r.Group(func(r chi.Router) {
 		r.Use(handler.AuthMiddleware(jwt))
 		r.Get("/profile", userHandler.GetProfile)
