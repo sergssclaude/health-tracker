@@ -35,17 +35,20 @@ func main() {
 	defer pool.Close()
 
 	userRepo := repository.NewUserRepository(pool)
-	userService := service.NewUserService(userRepo, jwt)
+	userInfoRepo := repository.NewUserInformationRepository(pool)
+	userGoalRepo := repository.NewUserGoalRepository(pool)
+
+	userService := service.NewUserService(userRepo, userInfoRepo, userGoalRepo, jwt)
 	userHandler := handler.NewUserService(userService)
 
 	r := chi.NewRouter()
 	r.Post("/register", userHandler.Register)
 	r.Post("/login", userHandler.Login)
 
-	//TODO
 	r.Group(func(r chi.Router) {
 		r.Use(handler.AuthMiddleware(jwt))
 		r.Get("/profile", userHandler.GetProfile)
+		r.Put("/profile", userHandler.UpdateProfile)
 		r.Get("/user/{id}", userHandler.GetUser)
 	})
 
