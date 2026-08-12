@@ -10,15 +10,18 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var ErrInvalidCredentials = errors.New("invalid email or password")
-var ErrEmailAlreadyExists = errors.New("Email already exists")
-var ErrUserNotFound = errors.New("User not found")
+var (
+	ErrInvalidCredentials = errors.New("Invalid email or password")
+	ErrEmailAlreadyExists = errors.New("Email already exists")
+	ErrUserNotFound       = errors.New("User not found")
+)
 
 type UserService interface {
 	Register(ctx context.Context, email, password string) (*model.User, error)
 	Login(ctx context.Context, email, password string) (string, error)
 	GetProfile(ctx context.Context, userID int) (*model.User, error)
-	UpdateProfile(ctx context.Context, userID, weight, height, age int, gender, goal string) (*model.User, error)
+	UpdateInformation(ctx context.Context, userID int, weight float64, height, age int, gender, dailyCalorieNorm string) (*model.UserInformation, error)
+	UpdateGoal(ctx context.Context, userID int, targetWeight float64, calorieGoal int) (*model.UserGoal, error)
 }
 
 type userService struct {

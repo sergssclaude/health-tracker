@@ -2,6 +2,12 @@ package model
 
 import "time"
 
+type UserProfile struct {
+	User        *User
+	Information *UserInformation
+	Goal        *UserGoal
+}
+
 type User struct {
 	Id           int
 	Email        string
@@ -16,7 +22,7 @@ type UserInformation struct {
 	Weight           *float64
 	Height           *int
 	Age              *int
-	Gender           *int
+	Gender           *string
 	DailyCalorieNorm *int
 	ProfileComplited bool
 	CreateAt         time.Time
