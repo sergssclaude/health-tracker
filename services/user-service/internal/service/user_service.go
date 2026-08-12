@@ -22,12 +22,15 @@ type UserService interface {
 }
 
 type userService struct {
-	repo      repository.UserRepository
-	jwtSecret string
+	userRepo     repository.UserRepository
+	userInfoRepo repository.UserInformationRepository
+	userGoalRepo repository.UserGoalRepository
+	jwtSecret    string
 }
 
-func NewUserService(repo repository.UserRepository, jwtString string) UserService {
-	return &userService{repo: repo, jwtSecret: jwtString}
+func NewUserService(userRepo repository.UserRepository, userInfoRepo repository.UserInformationRepository,
+	userGoalRepo repository.UserGoalRepository, jwtString string) UserService {
+	return &userService{userRepo: userRepo, userInfoRepo: userInfoRepo, userGoalRepo: userGoalRepo, jwtSecret: jwtString}
 }
 
 func (s *userService) Register(ctx context.Context, email, password string) (*model.User, error) {
@@ -40,7 +43,7 @@ func (s *userService) Register(ctx context.Context, email, password string) (*mo
 		PasswordHash: string(hash),
 	}
 
-	if err := s.repo.Create(ctx, user); err != nil {
+	if err := s.userRepo.Create(ctx, user); err != nil {
 		if errors.Is(err, repository.ErrEmailAlreadyExists) {
 			return nil, ErrEmailAlreadyExists
 		}
@@ -50,7 +53,7 @@ func (s *userService) Register(ctx context.Context, email, password string) (*mo
 }
 
 func (s *userService) Login(ctx context.Context, email, password string) (string, error) {
-	user, err := s.repo.GetByMail(ctx, email)
+	user, err := s.userRepo.GetByMail(ctx, email)
 	if err != nil {
 		if errors.Is(err, repository.ErrUserNotFound) {
 			return "", ErrInvalidCredentials
@@ -71,7 +74,7 @@ func (s *userService) Login(ctx context.Context, email, password string) (string
 }
 
 func (s *userService) GetProfile(ctx context.Context, userID int) (*model.User, error) {
-	user, err := s.repo.GetByID(ctx, userID)
+	user, err := s.userRepo.GetByID(ctx, userID)
 	if err != nil {
 		if errors.Is(err, repository.ErrUserNotFound) {
 			return nil, ErrUserNotFound
