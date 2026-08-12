@@ -18,7 +18,7 @@ type postgresUserProfileRepository struct {
 }
 
 func NewUserProfileRepository(pool *pgxpool.Pool) UserProfileRepository {
-	return postgresUserProfileRepository{pool: pool}
+	return &postgresUserProfileRepository{pool: pool}
 }
 
 func (r *postgresUserProfileRepository) GetFullProfile(ctx context.Context, userId int) (*model.UserProfile, error) {
@@ -34,7 +34,7 @@ func (r *postgresUserProfileRepository) GetFullProfile(ctx context.Context, user
 	var user model.User
 	var info model.UserInformation
 	var goal model.UserGoal
-	r.pool.QueryRow(ctx, query, userId).Scan(
+	err := r.pool.QueryRow(ctx, query, userId).Scan(
 		&user.Id, &user.Email, &user.Name, &user.CreatedAt, &user.UpdatedAt,
 		&info.Weight, &info.Height, &info.Age, &info.Gender, &info.DailyCalorieNorm, &info.UpdatedAt,
 		&goal.CalorieGoal, &goal.TargetWeight, &goal.UpdatedAt)
@@ -43,4 +43,9 @@ func (r *postgresUserProfileRepository) GetFullProfile(ctx context.Context, user
 			return nil, ErrUserNotFound
 		}
 	}
+	return &model.UserProfile{
+		User:        &user,
+		Information: &info,
+		Goal:        &goal,
+	}, nil
 }

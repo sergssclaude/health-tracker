@@ -68,6 +68,7 @@ func (r *postgresUserRepository) GetByMail(ctx context.Context, email string) (*
 		&user.Id,
 		&user.Email,
 		&user.PasswordHash,
+		&user.Name,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)

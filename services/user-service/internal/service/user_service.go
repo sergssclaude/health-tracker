@@ -87,7 +87,12 @@ func (s *userService) GetProfile(ctx context.Context, userID int) (*model.User, 
 	return user, nil
 }
 
-func (s *userService) UpdateProfile(ctx context.Context, userID, weight, height, age int, gender, goal string) (*model.User, error) {
+func (s *userService) UpdateInformation(ctx context.Context, userID int, weight float64, height, age int, gender, dailyCalorieNorm string) (*model.UserInformation, error) {
+	//TODO
+	return nil, nil
+}
+
+func (s *userService) UpdateGoal(ctx context.Context, userID int, targetWeight float64, calorieGoal int) (*model.UserGoal, error) {
 	//TODO
 	return nil, nil
 }

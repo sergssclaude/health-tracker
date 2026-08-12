@@ -4,9 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"strconv"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/sergssclaude/health-tracker/user-service/internal/service"
 )
 
@@ -58,20 +56,21 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
-	userId, ok := r.Context().Value(UserIDKey).(int)
-	if !ok {
-		http.Error(w, "user unauthorized", http.StatusUnauthorized)
-		return
-	}
-	user, err := h.service.GetProfile(r.Context(), userId)
-	if err != nil {
-		http.Error(w, "inernal error", http.StatusInternalServerError)
-		return
-	}
-	resp := toUserGetResponse(user)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(resp)
+	// userId, ok := r.Context().Value(UserIDKey).(int)
+	// if !ok {
+	// 	http.Error(w, "user unauthorized", http.StatusUnauthorized)
+	// 	return
+	// }
+	// user, err := h.service.GetProfile(r.Context(), userId)
+	// if err != nil {
+	// 	http.Error(w, "inernal error", http.StatusInternalServerError)
+	// 	return
+	// }
+	// resp := toUserGetResponse(user)
+	// w.Header().Set("Content-Type", "application/json")
+	// w.WriteHeader(http.StatusOK)
+	// json.NewEncoder(w).Encode(resp)
+
 }
 
 func (h *UserHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
@@ -79,20 +78,20 @@ func (h *UserHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
-	idStr := chi.URLParam(r, "id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		http.Error(w, "bad path parametr", http.StatusBadRequest)
-		return
-	}
+	// idStr := chi.URLParam(r, "id")
+	// id, err := strconv.Atoi(idStr)
+	// if err != nil {
+	// 	http.Error(w, "bad path parametr", http.StatusBadRequest)
+	// 	return
+	// }
 
-	user, err := h.service.GetProfile(r.Context(), id)
-	if err != nil {
-		http.Error(w, "inernal error", http.StatusInternalServerError)
-		return
-	}
-	resp := toUserGetResponse(user)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(resp)
+	// user, err := h.service.GetProfile(r.Context(), id)
+	// if err != nil {
+	// 	http.Error(w, "inernal error", http.StatusInternalServerError)
+	// 	return
+	// }
+	// resp := toUserGetResponse(user)
+	// w.Header().Set("Content-Type", "application/json")
+	// w.WriteHeader(http.StatusOK)
+	// json.NewEncoder(w).Encode(resp)
 }

@@ -42,6 +42,7 @@ func main() {
 	userHandler := handler.NewUserService(userService)
 
 	r := chi.NewRouter()
+	//Проверить 2 ендпоинта register, login (работают)
 	r.Post("/register", userHandler.Register)
 	r.Post("/login", userHandler.Login)
 
