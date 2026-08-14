@@ -72,7 +72,23 @@ func (h *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
-func (h *UserHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) UpdateInformation(w http.ResponseWriter, r *http.Request) {
+	userId, ok := r.Context().Value(UserIDKey).(int)
+	if !ok {
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
+	var req UpdateInformationRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Bad request body", http.StatusBadRequest)
+		return
+	}
+
+	userInfo, err := h.service.UpdateInformation(r.Context(), userId, req.Weight, req.Height, req.Age, req.Gender, req.DailyCalorieNorm)
+	if err != nil {
+		http.Error(w, "internal error", http.StatusInternalServerError)
+		return
+	}
 
 }
 

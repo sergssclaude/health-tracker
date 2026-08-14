@@ -46,7 +46,7 @@ type UserInformationResponse struct {
 	Height           *int     `json:"height"`
 	Age              *int     `json:"age"`
 	Gender           *string  `json:"gender"`
-	DailyCalorieNorm *int     `json:"daily_calorie_target"`
+	DailyCalorieNorm *int     `json:"daily_calorie_norm"`
 	ProfileCompleted bool     `json:"profile_completed"`
 }
 
@@ -75,4 +75,12 @@ func toUserGetResponse(u *model.UserProfile) UserProfileGetResponse {
 			CalorieGoal:  u.Goal.CalorieGoal,
 		},
 	}
+}
+
+type UpdateInformationRequest struct {
+	Weight           *float64 `json:"weight"`
+	Height           *int     `json:"height"`
+	Age              *int     `json:"age"`
+	Gender           *string  `json:"gender"`
+	DailyCalorieNorm *int     `json:"daily_calorie_norm"`
 }

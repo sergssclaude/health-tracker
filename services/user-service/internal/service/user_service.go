@@ -20,7 +20,7 @@ type UserService interface {
 	Register(ctx context.Context, email, password string) (*model.User, error)
 	Login(ctx context.Context, email, password string) (string, error)
 	GetProfile(ctx context.Context, userID int) (*model.UserProfile, error)
-	UpdateInformation(ctx context.Context, userID int, weight float64, height, age int, gender, dailyCalorieNorm string) (*model.UserInformation, error)
+	UpdateInformation(ctx context.Context, userID int, weight *float64, height *int, age *int, gender *string, dailyCalorieNorm *int) (*model.UserInformation, error)
 	UpdateGoal(ctx context.Context, userID int, targetWeight float64, calorieGoal int) (*model.UserGoal, error)
 }
 
@@ -92,7 +92,7 @@ func (s *userService) GetProfile(ctx context.Context, userID int) (*model.UserPr
 	return userProfile, nil
 }
 
-func (s *userService) UpdateInformation(ctx context.Context, userID int, weight float64, height, age int, gender, dailyCalorieNorm string) (*model.UserInformation, error) {
+func (s *userService) UpdateInformation(ctx context.Context, userID int, weight *float64, height *int, age *int, gender *string, dailyCalorieNorm *int) (*model.UserInformation, error) {
 	//TODO
 	return nil, nil
 }

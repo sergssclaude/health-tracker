@@ -50,7 +50,7 @@ func main() {
 	r.Group(func(r chi.Router) {
 		r.Use(handler.AuthMiddleware(jwt))
 		r.Get("/profile", userHandler.GetProfile)
-		// r.Put("/profile/information", userHandler.UpdateInformation)
+		r.Put("/profile/information", userHandler.UpdateInformation)
 		// r.Get("/profile/goal", userHandler.UpdateGoal)
 	})
 
