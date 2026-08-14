@@ -37,8 +37,9 @@ func main() {
 	userRepo := repository.NewUserRepository(pool)
 	userInfoRepo := repository.NewUserInformationRepository(pool)
 	userGoalRepo := repository.NewUserGoalRepository(pool)
+	userProfileRepo := repository.NewUserProfileRepository(pool)
 
-	userService := service.NewUserService(userRepo, userInfoRepo, userGoalRepo, jwt)
+	userService := service.NewUserService(userRepo, userInfoRepo, userGoalRepo, userProfileRepo, jwt)
 	userHandler := handler.NewUserService(userService)
 
 	r := chi.NewRouter()
@@ -49,8 +50,8 @@ func main() {
 	r.Group(func(r chi.Router) {
 		r.Use(handler.AuthMiddleware(jwt))
 		r.Get("/profile", userHandler.GetProfile)
-		r.Put("/profile", userHandler.UpdateProfile)
-		r.Get("/user/{id}", userHandler.GetUser)
+		// r.Put("/profile/information", userHandler.UpdateInformation)
+		// r.Get("/profile/goal", userHandler.UpdateGoal)
 	})
 
 	log.Println("starting server on :8080")

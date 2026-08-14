@@ -29,33 +29,50 @@ func toUserRegisterResponse(u *model.User) UserRegisterResponse {
 		Email: u.Email}
 }
 
-// type UserGetResponse struct {
-// 	Id                 int        `json:"id"`
-// 	Email              string     `json:"email"`
-// 	Password           string     `json:"password"`
-// 	Name               *string    `json:"name"`
-// 	Weight             *int       `json:"weight"`
-// 	Height             *int       `json:"height"`
-// 	Age                *int       `json:"age"`
-// 	Gender             *int       `json:"gender"`
-// 	Goal               *int       `json:"goal"`
-// 	DailyCalorieTarget *int       `json:"daily_calorie_target"`
-// 	CreatedAt          time.Time  `json:"created_at"`
-// 	UpdatedAt          *time.Time `json:"updated_at"`
-// }
+type UserProfileGetResponse struct {
+	User        UserResponse            `json:"user"`
+	Information UserInformationResponse `json:"information"`
+	Goal        UserGoalResponse        `json:"goal"`
+}
 
-// func toUserGetResponse(u *model.User) UserGetResponse {
-// 	return UserGetResponse{
-// 		Id:                 u.Id,
-// 		Email:              u.Email,
-// 		Password:           u.PasswordHash,
-// 		Name:               u.Name,
-// 		Weight:             u.Weight,
-// 		Height:             u.Height,
-// 		Age:                u.Age,
-// 		Gender:             u.Gender,
-// 		Goal:               u.Goal,
-// 		DailyCalorieTarget: u.DailyCalorieTarget,
-// 		CreatedAt:          u.CreatedAt,
-// 		UpdatedAt:          u.UpdatedAt}
-// }
+type UserResponse struct {
+	ID    int     `json:"id"`
+	Email string  `json:"email"`
+	Name  *string `json:"name"`
+}
+
+type UserInformationResponse struct {
+	Weight           *float64 `json:"weight"`
+	Height           *int     `json:"height"`
+	Age              *int     `json:"age"`
+	Gender           *string  `json:"gender"`
+	DailyCalorieNorm *int     `json:"daily_calorie_target"`
+	ProfileCompleted bool     `json:"profile_completed"`
+}
+
+type UserGoalResponse struct {
+	TargetWeight *float64 `json:"target_weight"`
+	CalorieGoal  *int     `json:"calorie_goal"`
+}
+
+func toUserGetResponse(u *model.UserProfile) UserProfileGetResponse {
+	return UserProfileGetResponse{
+		User: UserResponse{
+			ID:    u.User.Id,
+			Email: u.User.Email,
+			Name:  u.User.Name,
+		},
+		Information: UserInformationResponse{
+			Weight:           u.Information.Weight,
+			Height:           u.Information.Height,
+			Age:              u.Information.Age,
+			Gender:           u.Information.Gender,
+			DailyCalorieNorm: u.Information.DailyCalorieNorm,
+			ProfileCompleted: u.Information.ProfileComplited,
+		},
+		Goal: UserGoalResponse{
+			TargetWeight: u.Goal.TargetWeight,
+			CalorieGoal:  u.Goal.CalorieGoal,
+		},
+	}
+}

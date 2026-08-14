@@ -56,21 +56,20 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
-	// userId, ok := r.Context().Value(UserIDKey).(int)
-	// if !ok {
-	// 	http.Error(w, "user unauthorized", http.StatusUnauthorized)
-	// 	return
-	// }
-	// user, err := h.service.GetProfile(r.Context(), userId)
-	// if err != nil {
-	// 	http.Error(w, "inernal error", http.StatusInternalServerError)
-	// 	return
-	// }
-	// resp := toUserGetResponse(user)
-	// w.Header().Set("Content-Type", "application/json")
-	// w.WriteHeader(http.StatusOK)
-	// json.NewEncoder(w).Encode(resp)
-
+	userId, ok := r.Context().Value(UserIDKey).(int)
+	if !ok {
+		http.Error(w, "user unauthorized", http.StatusUnauthorized)
+		return
+	}
+	userProfile, err := h.service.GetProfile(r.Context(), userId)
+	if err != nil {
+		http.Error(w, "inernal error", http.StatusInternalServerError)
+		return
+	}
+	resp := toUserGetResponse(userProfile)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(resp)
 }
 
 func (h *UserHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {

@@ -19,21 +19,26 @@ var (
 type UserService interface {
 	Register(ctx context.Context, email, password string) (*model.User, error)
 	Login(ctx context.Context, email, password string) (string, error)
-	GetProfile(ctx context.Context, userID int) (*model.User, error)
+	GetProfile(ctx context.Context, userID int) (*model.UserProfile, error)
 	UpdateInformation(ctx context.Context, userID int, weight float64, height, age int, gender, dailyCalorieNorm string) (*model.UserInformation, error)
 	UpdateGoal(ctx context.Context, userID int, targetWeight float64, calorieGoal int) (*model.UserGoal, error)
 }
 
 type userService struct {
-	userRepo     repository.UserRepository
-	userInfoRepo repository.UserInformationRepository
-	userGoalRepo repository.UserGoalRepository
-	jwtSecret    string
+	userRepo        repository.UserRepository
+	userInfoRepo    repository.UserInformationRepository
+	userGoalRepo    repository.UserGoalRepository
+	userProfileRepo repository.UserProfileRepository
+	jwtSecret       string
 }
 
 func NewUserService(userRepo repository.UserRepository, userInfoRepo repository.UserInformationRepository,
-	userGoalRepo repository.UserGoalRepository, jwtString string) UserService {
-	return &userService{userRepo: userRepo, userInfoRepo: userInfoRepo, userGoalRepo: userGoalRepo, jwtSecret: jwtString}
+	userGoalRepo repository.UserGoalRepository, userProfileRepo repository.UserProfileRepository, jwtString string) UserService {
+	return &userService{userRepo: userRepo,
+		userInfoRepo:    userInfoRepo,
+		userGoalRepo:    userGoalRepo,
+		userProfileRepo: userProfileRepo,
+		jwtSecret:       jwtString}
 }
 
 func (s *userService) Register(ctx context.Context, email, password string) (*model.User, error) {
@@ -76,15 +81,15 @@ func (s *userService) Login(ctx context.Context, email, password string) (string
 	return token, nil
 }
 
-func (s *userService) GetProfile(ctx context.Context, userID int) (*model.User, error) {
-	user, err := s.userRepo.GetByID(ctx, userID)
+func (s *userService) GetProfile(ctx context.Context, userID int) (*model.UserProfile, error) {
+	userProfile, err := s.userProfileRepo.GetFullProfile(ctx, userID)
 	if err != nil {
 		if errors.Is(err, repository.ErrUserNotFound) {
 			return nil, ErrUserNotFound
 		}
 		return nil, err
 	}
-	return user, nil
+	return userProfile, nil
 }
 
 func (s *userService) UpdateInformation(ctx context.Context, userID int, weight float64, height, age int, gender, dailyCalorieNorm string) (*model.UserInformation, error) {
