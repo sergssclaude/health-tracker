@@ -89,24 +89,34 @@ func (h *UserHandler) UpdateInformation(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
+	resp := toUpdateInformationResponse(userInfo)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(resp)
 
 }
 
-func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
-	// idStr := chi.URLParam(r, "id")
-	// id, err := strconv.Atoi(idStr)
-	// if err != nil {
-	// 	http.Error(w, "bad path parametr", http.StatusBadRequest)
-	// 	return
-	// }
+func (h *UserHandler) UpdateGoal(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value(UserIDKey).(int)
+	if !ok {
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
 
-	// user, err := h.service.GetProfile(r.Context(), id)
-	// if err != nil {
-	// 	http.Error(w, "inernal error", http.StatusInternalServerError)
-	// 	return
-	// }
-	// resp := toUserGetResponse(user)
-	// w.Header().Set("Content-Type", "application/json")
-	// w.WriteHeader(http.StatusOK)
-	// json.NewEncoder(w).Encode(resp)
+	var req UpdateGoalRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	goal, err := h.service.UpdateGoal(r.Context(), userID, req.TargetWeight, req.CalorieGoal)
+	if err != nil {
+		http.Error(w, "internal error", http.StatusInternalServerError)
+		return
+	}
+
+	resp := toUserGoalResponse(goal)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(resp)
 }

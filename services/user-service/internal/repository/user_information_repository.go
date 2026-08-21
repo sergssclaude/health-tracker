@@ -24,19 +24,18 @@ func NewUserInformationRepository(pool *pgxpool.Pool) UserInformationRepository 
 
 func (r *postgresUserInformationRepository) Upsert(ctx context.Context, info *model.UserInformation) error {
 	query := `
-	INSERT INTO user_information (user_id, weight, height, age, gender, daily_calorie_norm, profile_complited, created_at, updated_at)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, now())
+	INSERT INTO user_information (user_id, weight, height, age, gender, daily_calorie_norm, updated_at)
+	VALUES ($1, $2, $3, $4, $5, $6, now())
 	ON CONFLICT (user_id) DO UPDATE SET
-	weight = EXCLUDED.weight,
-	height = EXCLUDED.height,
-	age = EXCLUDED.age,
-	gender = EXCLUDED.gender,
-	daily_calorie_norm = EXCLUDED.daily_calorie_norm,
-	profile_complited = EXCLUDED.profile_complited,
-	updated_at = now()
+	weight = COALESCE(EXCLUDED.weight, user_information.weight),
+    height = COALESCE(EXCLUDED.height, user_information.height),
+    age = COALESCE(EXCLUDED.age, user_information.age),
+    gender = COALESCE(EXCLUDED.gender, user_information.gender),
+    daily_calorie_norm = COALESCE(EXCLUDED.daily_calorie_norm, user_information.daily_calorie_norm),
+    updated_at = now()
 	`
 	_, err := r.pool.Exec(ctx, query, info.UserId, info.Weight, info.Height, info.Age,
-		info.Gender, info.DailyCalorieNorm, info.ProfileComplited)
+		info.Gender, info.DailyCalorieNorm)
 
 	return err
 }

@@ -21,7 +21,7 @@ type UserService interface {
 	Login(ctx context.Context, email, password string) (string, error)
 	GetProfile(ctx context.Context, userID int) (*model.UserProfile, error)
 	UpdateInformation(ctx context.Context, userID int, weight *float64, height *int, age *int, gender *string, dailyCalorieNorm *int) (*model.UserInformation, error)
-	UpdateGoal(ctx context.Context, userID int, targetWeight float64, calorieGoal int) (*model.UserGoal, error)
+	UpdateGoal(ctx context.Context, userID int, targetWeight *float64, calorieGoal *int) (*model.UserGoal, error)
 }
 
 type userService struct {
@@ -93,11 +93,31 @@ func (s *userService) GetProfile(ctx context.Context, userID int) (*model.UserPr
 }
 
 func (s *userService) UpdateInformation(ctx context.Context, userID int, weight *float64, height *int, age *int, gender *string, dailyCalorieNorm *int) (*model.UserInformation, error) {
-	//TODO
-	return nil, nil
+	userInfo := model.UserInformation{
+		UserId:           userID,
+		Weight:           weight,
+		Height:           height,
+		Age:              age,
+		Gender:           gender,
+		DailyCalorieNorm: dailyCalorieNorm,
+	}
+	if err := s.userInfoRepo.Upsert(ctx, &userInfo); err != nil {
+		return nil, err
+	}
+
+	return s.userInfoRepo.GetByUserId(ctx, userID)
 }
 
-func (s *userService) UpdateGoal(ctx context.Context, userID int, targetWeight float64, calorieGoal int) (*model.UserGoal, error) {
-	//TODO
-	return nil, nil
+func (s *userService) UpdateGoal(ctx context.Context, userID int, targetWeight *float64, calorieGoal *int) (*model.UserGoal, error) {
+	goal := &model.UserGoal{
+		UserId:       userID,
+		TargetWeight: targetWeight,
+		CalorieGoal:  calorieGoal,
+	}
+
+	if err := s.userGoalRepo.Upsert(ctx, goal); err != nil {
+		return nil, err
+	}
+
+	return s.userGoalRepo.GetByUserId(ctx, userID)
 }

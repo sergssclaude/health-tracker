@@ -51,7 +51,7 @@ func main() {
 		r.Use(handler.AuthMiddleware(jwt))
 		r.Get("/profile", userHandler.GetProfile)
 		r.Put("/profile/information", userHandler.UpdateInformation)
-		// r.Get("/profile/goal", userHandler.UpdateGoal)
+		r.Put("/profile/goal", userHandler.UpdateGoal)
 	})
 
 	log.Println("starting server on :8080")

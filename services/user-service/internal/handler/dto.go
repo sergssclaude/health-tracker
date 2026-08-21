@@ -50,11 +50,6 @@ type UserInformationResponse struct {
 	ProfileCompleted bool     `json:"profile_completed"`
 }
 
-type UserGoalResponse struct {
-	TargetWeight *float64 `json:"target_weight"`
-	CalorieGoal  *int     `json:"calorie_goal"`
-}
-
 func toUserGetResponse(u *model.UserProfile) UserProfileGetResponse {
 	return UserProfileGetResponse{
 		User: UserResponse{
@@ -83,4 +78,41 @@ type UpdateInformationRequest struct {
 	Age              *int     `json:"age"`
 	Gender           *string  `json:"gender"`
 	DailyCalorieNorm *int     `json:"daily_calorie_norm"`
+}
+
+type UpdateInformationResponse struct {
+	UserId           int      `json:"user_id"`
+	Weight           *float64 `json:"weight"`
+	Height           *int     `json:"height"`
+	Age              *int     `json:"age"`
+	Gender           *string  `json:"gender"`
+	DailyCalorieNorm *int     `json:"daily_calorie_norm"`
+}
+
+func toUpdateInformationResponse(u *model.UserInformation) UpdateInformationResponse {
+	return UpdateInformationResponse{
+		UserId:           u.UserId,
+		Weight:           u.Weight,
+		Height:           u.Height,
+		Age:              u.Age,
+		Gender:           u.Gender,
+		DailyCalorieNorm: u.DailyCalorieNorm,
+	}
+}
+
+type UpdateGoalRequest struct {
+	TargetWeight *float64 `json:"target_weight"`
+	CalorieGoal  *int     `json:"calorie_goal"`
+}
+
+type UserGoalResponse struct {
+	TargetWeight *float64 `json:"target_weight"`
+	CalorieGoal  *int     `json:"calorie_goal"`
+}
+
+func toUserGoalResponse(g *model.UserGoal) UserGoalResponse {
+	return UserGoalResponse{
+		TargetWeight: g.TargetWeight,
+		CalorieGoal:  g.CalorieGoal,
+	}
 }
