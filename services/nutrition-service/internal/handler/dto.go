@@ -37,3 +37,27 @@ func toFoodLogListResponse(logs []model.FoodLog) []LogFoodResponse {
 	}
 	return resp
 }
+
+type FoodItemResponse struct {
+	ID              int    `json:"id"`
+	Name            string `json:"name"`
+	CaloriesPer100g int    `json:"calories_per_100g"`
+	ProteinPer100g  *int   `json:"protein_per_100g"`
+	FatPer100g      *int   `json:"fat_per_100g"`
+	CarbsPer100g    *int   `json:"carbs_per_100g"`
+}
+
+func toFoodItemListResponse(items []model.FoodItem) []FoodItemResponse {
+	resp := make([]FoodItemResponse, 0, len(items))
+	for _, item := range items {
+		resp = append(resp, FoodItemResponse{
+			ID:              item.ID,
+			Name:            item.Name,
+			CaloriesPer100g: item.CaloriesPer100g,
+			ProteinPer100g:  item.ProteinPer100g,
+			FatPer100g:      item.FatsPer100g,
+			CarbsPer100g:    item.CarbsPer100g,
+		})
+	}
+	return resp
+}

@@ -19,7 +19,7 @@ type postgresFoodItemRepository struct {
 	pool *pgxpool.Pool
 }
 
-func newPostgresFoodItemRepository(pool *pgxpool.Pool) FoodItemRepository {
+func NewPostgresFoodItemRepository(pool *pgxpool.Pool) FoodItemRepository {
 	return &postgresFoodItemRepository{pool: pool}
 }
 

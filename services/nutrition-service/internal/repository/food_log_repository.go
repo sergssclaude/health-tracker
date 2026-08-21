@@ -22,7 +22,7 @@ type postgresFoodLogRepository struct {
 	pool *pgxpool.Pool
 }
 
-func newPostgresFoodLogRepository(pool *pgxpool.Pool) FoodLogRepository {
+func NewPostgresFoodLogRepository(pool *pgxpool.Pool) FoodLogRepository {
 	return &postgresFoodLogRepository{pool: pool}
 }
 
